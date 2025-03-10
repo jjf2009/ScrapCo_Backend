@@ -1,0 +1,84 @@
+http://localhost:8080
+
+Accept: application/json;
+Content-Type: application/json; charset=utf-8
+
+POST /auth/signup/seller
+{
+  "fullName": "Harsh Gaonker",
+  "phone": "1231231231",
+  "email": "dev@test.com",
+  "password": "333333",
+  "permAddress": "123 fake street",
+  "profilePicture": "http://hello",
+  "sellerRole": "INDIVIDUAL"
+}
+
+http://localhost:8080
+
+Accept: application/json;
+Content-Type: application/json; charset=utf-8
+
+GET /
+
+##########################################################
+
+http://localhost:8080
+
+POST /create
+{
+  "seller_name": "John Doe",
+  "seller_phone": "+919876543210",
+  "telegram_id": "987654321",
+  "pictures": [
+    "https://example.com/image1.jpg",
+    "https://example.com/image2.jpg"
+  ],
+  "description": "Old iron rods for sale",
+  "quantity": 10.5,
+  "listPlat": "TELEGRAM",
+  "material": "IRON",
+  "pickUpAddress": "123 Street, Goa",
+  "pickUpTime": "3.30am",  
+  "price": 500.00,
+  "status": "PENDING"
+}
+
+##########################################################
+
+http://localhost:8080
+
+POST /addItem
+{
+  "name" : "Harry Potter",
+  "images" : ["url1", "url2"],
+  "points" : 99,
+  "stock" : 100,
+  "category" : "earthen pots",
+  "description" : "eco friedly earther made from Goan soil",
+  "company" : "abra ca dabra"
+}
+
+##########################################################
+
+http://localhost:8080
+
+POST /addItem
+{
+  "name" : "paper plates",
+  "images" : ["url1", "url2"],
+  "points" : 88,
+  "stock" : 32,
+  "category" : "eco friendly, biodegradable plates",
+  "description" : "eco friedly plates made from Goan areca nut leaves",
+  "company" : "the plate co"
+}
+
+
+
+##################################################
+
+http://localhost:8080
+Accept: application/json;
+Content-Type: application/json; charset=utf-8
+GET /shop/allItems

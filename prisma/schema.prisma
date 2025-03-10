@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SellerRole {
+  ORGANISATION
+  INDIVIDUAL
+}
+
+enum ScrapMaterial {
+  ALUMINUM
+  STEEL
+  COPPER
+  PLASTIC
+  GLASS
+  WOOD
+  PAPER
+  RUBBER
+  TEXTILE
+  IRON
+  OTHER
+}
+
+enum ItemStatus {
+  PENDING
+  PICKED
+  COMPLETED
+}
+
+enum Role {
+  SELLER
+  DEALER
+}
+
+enum listPlatform {
+  WEBSITE
+  TELEGRAM
+}
+
+model User {
+  userId          String     @id @default(uuid())
+  role            Role       @default(SELLER)
+  fullName        String
+  phone           String   
+  email           String?     @unique
+  passwordHash    String
+  permAddress     String
+  profilePicture  String?
+  itemsSold       Int?
+  itemsPublish    Int?
+  sellerRole      SellerRole @default(INDIVIDUAL)
+  orgName         String?
+  orgAddress      String?
+  points          Int         @default(0)
+  items           Item[]      // One-to-many relation: A user can have many items
+  transactions    Transaction[] // One-to-many relation: A user can have many transactions
+  //we can have rating later
+}
+
+model Dealer {
+  dealerId        String    @id @default(uuid())
+  role            Role      @default(DEALER)
+  fullName        String
+  phone           String    @unique
+  email           String    @unique
+  passwordHash    String
+  permAddress     String
+  profilePicture  String?
+  orgName         String
+  orgAddress      String    // Organisation address
+  gstNo           String    @unique // GST number
+  licNum          String    @unique // License number
+  items           Item[]     // One-to-many relation: A dealer can buy many items (one at a time)
+  transactions    Transaction[] // One-to-many relation: A dealer can have many transactions (one per item)
+  //we can add ratings later
+}
+
+model Item {
+  itemId              Int       @id @default(autoincrement())
+  user_id             String?       // Optional user_id (can store userId or Telegram ID)
+  dealer_id           String?       // Optional dealer_id when sold
+
+  telegram_id         String?       // Optional Telegram ID
+  seller_name         String
+  seller_phone        String
+  pictures            String[]      // Array for multiple images
+  description         String
+  quantity            Float         // Quantity as Float
+  listPlat            listPlatform  
+  material            ScrapMaterial 
+  pickUpAddress       String
+  pickUpTime          String
+  price               Float
+
+  status              ItemStatus    @default(PENDING)
+  createdAt           DateTime      @default(now())
+
+  // Relation to User table (Only enforce if user_id is a valid UserId)
+  userAcc             User?        @relation(fields: [user_id], references: [userId], onDelete: SetNull, onUpdate: Cascade)
+
+  dealer              Dealer?      @relation(fields: [dealer_id], references: [dealerId], onDelete: SetNull, onUpdate: Cascade)
+  transaction         Transaction? // One-to-one relationship with Transaction
+}
+
+
+model Transaction {
+  transactionId      String     @id @default(uuid())
+
+  userId             String
+  dealerId           String
+  itemId             Int     @unique  // Making this unique ensures one-to-one relationship with Item
+  amount             Float
+  paymentStatus      String     // E.g., 'Paid', 'Pending'
+  trackingId         String?    // Optional tracking ID for pickup and delivery
+
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  user               User       @relation(fields: [userId], references: [userId])     // User foreign key
+  dealer             Dealer     @relation(fields: [dealerId], references: [dealerId])   // Dealer foreign key
+  item               Item       @relation(fields: [itemId], references: [itemId])       // Item foreign key (One-to-one relation)
+}
+
+model ShopItem {
+  ItemId             Int        @id @default(autoincrement())
+  name               String
+  images             String[]
+  points             Int
+  stock              Int
+  category           String
+  description        String
+  company            String
+}
