@@ -2,9 +2,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import prisma from "../prismaClient.js";
-import validator from "validator";
-
-const { isEmail, isMobilePhone } = validator;
 
 dotenv.config();
 
@@ -12,7 +9,7 @@ dotenv.config();
 export const signupSeller = async (req, res) => {
     try {
         const {
-            fullName, phone, email, password, permAddress, sellerRole, gstNumber, licenseNumber
+            id,fullName, phone, email, password, permAddress, sellerRole, gstNumber, licenseNumber
         } = req.body;
 
         let orgAddress = null;
@@ -43,6 +40,7 @@ export const signupSeller = async (req, res) => {
         try {
             const user = await prisma.user.create({
                 data: {
+                    userId:id,
                     fullName,
                     phone,
                     email,

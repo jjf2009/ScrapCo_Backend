@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import sellerRoutes from "./routes/sellerRoutes.js";
 import itemRoutes from "./routes/itemRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
-
+// import uploadRoutes from "./routes/uploadRoutes.js";
 import shopRoutes from "./routes/shopRoutes.js";
 
 dotenv.config();
@@ -27,6 +27,7 @@ app.use("/", sellerRoutes);
 app.use("/", itemRoutes);
 app.use("/", orderRoutes);
 app.use("/", shopRoutes);
+// app.use("/", uploadRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
